@@ -1,0 +1,697 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\pagenumbering{roman}
+\usepackage{enumitem}
+\pagenumbering{empty}
+\usepackage{amsthm}
+\usepackage{float}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{Def}[thm]{Definition}
+\newtheorem{cond}[thm]{Condition}
+%\usepackage[paperheight=24cm,paperwidth=16cm,textwidth=11cm]{geometry}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage[T2A]{fontenc}
+\usepackage{titling}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\newtheorem{theorem}{Theorem}
+\usepackage{natbib}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\usepackage{wrapfig}
+\usepackage{lastpage}
+\usepackage{imakeidx}
+\makeindex[columns=2, title=Index, options= -s example_style.ist]
+\usepackage[totoc, initsep =15pt]{idxlayout}
+\usepackage{idxlayout}
+\title{Mathematical Modelling of COVID-19 using Mozambique COVID-19 data}
+\author{Mr S'khumbuzo Martin Ngema\\\\ 45416850\\\\Supervisor: Prof D Mathebula}
+%\date{June 2022}
+\begin{document}
+\newpage
+\maketitle
+\newpage
+\pagenumbering{roman}
+\fancyfoot[LE,RO]{\thepage}
+\section*{Declaration}
+\addcontentsline{toc}{section}{Declaration}
+Declare that I am the sole author of this project and that it has never before been presented, in whole or in part, as part of another student's application for a degree. The work offered is solely mine, unless otherwise noted by reference or acknowledgement.\\\\Signed \rule{\textwidth}{0.2pt}\\\\
+Date \rule{\textwidth}{0.2pt}
+\newpage
+\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+The COVID-19 transmission dynamics in Mozambique were examined using the SIDARTHE model, and equilibrium points were accurately determined. sensitivity analysis was then used to determine which parameters needed to be targeted to ensure that transmission was maintained to a minimum. We adopted the COVID-19 data from Mozambique to our model, and then we used a statistical line of goodness-of-fit to assess the accuracy of our predictions
+\newpage
+\section*{Acknowledgement}
+\addcontentsline{toc}{section}{Acknowledgement}
+I'm thankful to God for his love and care during this study period. Without the assistance of a select group of people, this study endeavor would not have been possible. I want to thank the following people for their assistance and support in our research effort. I want to thank the following people for their assistance and support in our research effort:\\\\
+\begin{itemize}
+    \item I thank my supervisor, Professor Dephney Mathebula, for all of his or her knowledge, direction, and support, as well as for showing me how to improve as a researcher and mathematician. We appreciate your kind comments, which helped make this project manageable.\\
+    \item I am grateful that the University of South Africa allowed me to work on this project.\\
+    \item My studies were made possible by the University of South Africa's CGS Postgraduate and Student Funding department's financial support.\\
+    \item Please accept my companion Mbali Jange's gratitude for your unending support and inspiration.\\
+    \item I want thank my family for the support they gave me.\\
+    \item Additionally, I want to express my gratitude to my friends Nhlanhla Sibiya, Cebo Ngema, Siphamandla Khumalo, Precious Chiwira, Manqoba Mbatha, Babongile Ngidi, and Thobekile Myeni for their extraordinary encouragement and direction in some of the areas where I most needed it.
+\end{itemize}
+\newpage
+\section*{Dedications}
+\addcontentsline{toc}{section}{Dedications}
+\textit{I dedicate this work to my mom}.\\\\
+\textit{BP Magagula}
+\newpage
+\stepcounter{page}
+\tableofcontents
+\clearpage
+\fancyhead[R]{S'khumbuzo Martin Ngema - 45416850}
+\fancyhead[L]{DSC4830}
+\fancyfoot[R]{Page \thepage \hspace{1pt} of \pageref{LastPage}}
+\section{Introduction}
+%
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\subsection{Overview of COVID-19}
+The human corona viruses\index{Viruses} were known as harmless to humans until the 1960s when 229E and OC43 had been identified \citep{yesudhas2021covid}. The SARS-CoV\index{SARS-CoV} was spread to other animals but was initially identified in bats. In 2003, SARS-CoV had also been discovered in people after being acquired from animals. \citep{yesudhas2021covid}. In 2012, 11 people were infected by acute respiratory illness in the Middle East. After an epidemiological\index{Epidemiological} investigation done, it was not clear what is the cause of this fever until September 2012 when novel coronaviruses\index{Coronaviruses} (nCov) was found in a Saudi Arabian patient\index{Patient}. After some tests from patients with nCoV\index{NCoV} and using the reports from patients with acute respiratory\index{Respiratory} illness, it led to a further investigation done where they discovered that those cases of nCoV and that of acute respiratory illness\index{Illness} were unrelated \citep{hijawi2013novel}.\\\\SARS-CoV-2 was discovered in Wuhan, Hubei province, China in December 2019 \citep{giordano2020modelling}.  In both people and animals, coronaviruses can cause diseases of the respiratory, digestive, and central nervous systems, and they are spread through mutations \citep{yesudhas2021covid}. By 5 January 2023, 657 430 133 COVID-19 cases have been confirmed and 6 676 645 deaths have been reported worldwide, according to \citep{worldhealthorganisation}. SARS-CoV-2 was deemed a pandemic by the World Health Organization (WHO), and lockdown procedures were deployed in several countries to reduce the high transmission rate \citep{ciotti2020covid}. The majority of Southern African nations reported their first COVID-19 case by mid-February 2020, and South Africa, Egypt, Ghana, and Cameroon are among those that reported more infections \citep{sumbana2020air}.\\\\Mozambique was the final nation to report its first positive case by March 22, 2020, and they were able to recover since they had been using epidemic control techniques \citep{sumbana2020air, mishra2021mathematical}. To prevent the transmission of COVID-19, some control techniques must be evaluated to see which will have a greater effect. On March 22, 2020, South Africa reported its first case, he was a male over 75 years of age who visited the UK and his 23 contacts were traced\index{Traced} so that they can be isolated as well \citep{sumbana2020air, mwiinde2022climatic}. COVID-19 can be transmitted\index{Transmitted} to humans indoors and outdoors. It can also spread because it can persist on surfaces for a few minutes after an infected person spits or drops some fluid on them. It can be spread to humans by droplets and particles moving through the air in the room or space \citep{sumbana2020air}.\\\\ 
+
+Several COVID-19 symptoms include fever, dry coughs, breathing difficulty, and headaches \citep{drosten2003identification}. Prolonged respiratory failure brought on by lung disease may cause mortality \citep{tsang2003cluster}. It indicates that the major way COVID-19 spreads is through direct contact with tainted or infected things and that prolonged exposure to high particle concentrations in a properly controlled environment can result in the spread of airborne particles \citep{wang2020covid}. People are encouraged to regularly clean their hands, use hand sanitizer, refrain from rubbing their face or lips after being in contact with a possibly infected object, avoid crowds, and protect their mouths when they sneeze or cough. to reduce the chance of transmission \citep{guner2020covid}.\\\\COVID-19\index{COVID-19} is the largest pandemic\index{Pandemic} in this century with 546 151 123 cases, 6 344 311 deaths, 521 920 064 recoveries\index{Recoveries} worldwide\index{Worldwide} and in Mozambique 227 255 reported cases, 2211 deaths, 224 456 recoveries\index{Recoveries} as 22 June 2022 and information obtained from \citep{Worldometer}. Since Mozambique has an estimated population\index{Population} of 33 million it indicates that it has the smallest number of infections\index{Infections} as a result of COVID-19 as compared to countries like the USA with total cases of 26,36 percent, UK 32,89 percent, South Africa 6,56 percent, Zimbabwe 1,67 percent, Namibia 6,41 percent. In comparison, Mozambique has 0,69 percent of reported cases \citep{Worldometer}. The study shows their strengths\index{Strengths} and their weaknesses\index{Weaknesses} that led them to have the least infections as compared to many other countries\index{Countries}.
+
+\subsection{Overview of Mathematical models of COVID-19}
+The majority of studies discuss mathematical model features including illness eradication and disease spread delay techniques \citep{ diekmann2000mathematical, anderson1979population, brauer2012mathematical, hethcote2000mathematics}. Numerous articles, including \citep{adamu2019mathematical}, have used the Susceptible-Infective-Recovered (SIR) model to demonstrate that, even while the infection incidence is quickly dropping, the recovery rate is high. \citep{cooper2020sir} thought that more stringent regulations needed to be put in place as soon as the pandemic started and \citep{chen2021numerical} developed a method for calculating uncertainty probabilities and loosened the requirements for solution values. Quarantine and geographic movement constrictions were acknowledged by \citep{colombo2020age}. The Susceptible-Exposed-Infectious-Recovered (SEIR) is another popular model used by some writers including \citep{he2020seir} where they looked into how pathogens were introduced into the environment and how the government intervened. Seasonality and stochastic infection characteristics were added by \citep{mwalili2020seir} to the SEIR model. In order to have a lower mortality rate, \citep{lopez2021modified} evaluated the confinement rate in the early phases.\\\\
+\citep{muniyappan2022stability} verified the five COVID-19 states and the Omicron variation that were most adversely affected while \citep{li2022optimal} discovered that adults, children, and those with underlying medical issues are particularly vulnerable to the Omicron transmission. \citep{samui2020mathematical} predicted and managed the COVID-19 transmission dynamics using data on epidemics. \citep{meehan2020modelling} discovered that the scientific method was required to stop the spread of the virus and contain it.
+
+\subsection{The study's driving force}
+In light of the fact that COVID-19\index{COVID-19} is the most severe pandemic of our century, with 546 151 123 cases, 6 344 311 fatalities, and 521 920 064 recoveries globally and in Mozambique, respectively, it is crucial to identify the practical control strategies\index{Strategies} that can be used to significantly reduce the rate of disease dissemination\index{Dissemination}. To assist stop the spread of other pandemics\index{Pandemics} including the Spanish flu, zika\index{Zika} virus, cholera, HIV, ebola\index{Ebola}, and others \citep{regina2021review}, there have been mathematical models utilized as tools. A disease's spread among humans is widely studied using SIR or SEIR models \citep{ogren2002vaccination}.\\\\ SIDARTHE \citep{giordano2020modelling} model has been used to help distinguish between cases of asymptomatic infection and symptomatic detection as well as between cases of asymptomatic\index{Asymptomatic} infection and symptomatic\index{Symptomatic} undetected infection.
+Despite being a third-world country, Mozambique has managed to have low infection rates and low mortality\index{Mortality} rates. Therefore, we must evaluate a number of variables that may have contributed to that, taking into account the dynamic behavior of COVID-19 and the reproduction\index{Reproduction} rate of the virus in Mozambique. We must also employ\index{Employ} the SIDARTHE\index{SIDARTHE} model, which was one of the models used in Italy, one of the nations with the highest rates of death and new infections. 
+
+\subsection{Primary goal of the research}
+To adopt the SIDARTHE model and Identify the control techniques that will most effectively stop the disease's spread by analyzing the dynamics of transmission as a result of Mozambique's control measures and give authorities recommendations on the short- and long-term policies they should implement based on mathematical analysis and sensitive numerical findings.
+
+\subsection{Goals of the research}
+
+\begin{itemize}
+\item To adopt the SIDARTHE model for examining the transmission dynamics of COVID-19 in Mozambique.
+\item To perform Mathematical analysis of SIDARTHE model (Equilibrium points (Disease free and Endemic Equilibrium points), Basic Reproductive Number, Stability Analysis of DFE)
+\item To perform sensitivity analysis to identify the parameters that can be targeted when implementing control measures of COVID-19 using the Reproduction number.   
+\item To fit SIDARTHE model to Mozambique COVID-19 data.
+\end{itemize}
+
+\subsection{SIDARTHE Model Formulation}
+
+ In subsection, we adopt the \citep{giordano2020modelling} SIDARTHE model that has been used in Italy where they predicted the rate of infections, death rates, recovery rates, and how to contain\index{Contain} this pandemic\index{Pandemic}. We have eight-time independent variable which are Susceptible\index{Susceptible}, Infected, Diagnosed\index{Diagnosed}, Ailing\index{Ailing}, Recognized\index{Recognized}, Threatened\index{Threatened}, Healed\index{Healed}, Extinct\index{Extinct} at categories. This model describes the rate of spread\index{Spread} of the disease\index{Disease} after some measures have been introduced to ensure that the virus\index{Virus} is contained. Measures used include practicing social distancing\index{Social distancing}, wearing facial masks, the introduction of lockdown and its review\index{Review}, curfew\index{Curfew} time, testing, treatment, contact tracing\index{Tracing} \citep{assamagan2020study}.
+ 
+ \subsection*{Assumptions of the model}\label{Assumptions:1}
+
+\begin{itemize}
+     \item The recruitment rate is constant, that is we do not have people coming into Mozambique from other countries. 
+     \item The infected individuals can die due to either COVID-19 or natural courses.
+     \item The infected individuals can be healed or die.
+     \item The deceased can no longer transmit the disease.
+     \item The diagnostic tools are precise.
+ \end{itemize}
+ The total population of Susceptible people multiplied by the total number of infected, detected, ailing, and recognized people is the susceptible population, or $S_j(t)$. $\beta_5$ show how an infection spreads from susceptible to infected people, $\kappa_5$ show how an infection spreads from susceptible to diagnosed, $\mu_5$ show how the infection spread from susceptible to the ailing group, $\gamma_5$ show how an infection spreads from susceptible to recognized. Days of the susceptible population's rate of change over time are provided by:\\
+ \begin{align}
+     \frac{\text{d}S_j(t)}{\text{d}t} = -S_j(t)(\beta_5 I_k(t) +\kappa_5 D_l(t) +\mu_5 A_m(t)+\gamma_5 R_n(t))
+ \end{align}
+ The Infected population, $I_k(t)$, is determined by the interplay of the susceptible and infected populations. $\lambda_5$ is the frequency of identifying an infected person, $\delta_5$ the speed at which an infected person will become unwell, and $\tau_5$ the speed at which an infected person will recover. The number of days the infected population changes at a particular pace over time is provided by\\
+\begin{align}
+  \frac{\text{d}I_k(t)}{\text{d}t}=S_j(t)(\beta_5 I_k(t) +\kappa_5 D(t)+\mu_5 A_m(t)+\gamma_5 R_n(t))-(\lambda_5 +\delta_5 + \tau_5)I_k(t)  
+ \end{align}
+ The Diagnosed population $D_l$ is divided into infected individuals who acquired the infection after being identified at the rate of $\lambda_5$ and those who were identified later, with $\theta_5$ denoting the scale of propagation at which an infected subject becomes aware that they are infected and exhibits clinically significant symptoms and the levels of recuperation for the Discovered individuals are $\xi_5$. The number of days the discovered population changes at a particular pace over time is provided by\\
+\begin{align}
+ \frac{\text{d}D_l(t)}{\text{d}t} =\lambda_5 I_k(t) -(\theta_5 + \xi_5)D_l(t)   
+\end{align} 
+ The Ailing population $A_m$ is produced by infected individuals, and the awareness rate is indicated by $\delta_5$ with $\alpha_5$ being the recovery rate, $\nu_5$ being the life-treating rate, and $\rho_5$ being the healing rate. The number of days the ailing population changes at a particular pace over time is provided by\\
+\begin{align}
+    \frac{\text{d}A_m(t)}{\text{d}t} = \delta_5 I_k(t) -(\alpha_5 + \nu_5 + \rho_5)A_m(t)
+ \end{align}
+ The Recognized $R_n$ is taken from discovered and ailing subjects at rates of $\theta_5$ and $\alpha_5$, respectively, and $\epsilon_5$ measures the rate at which they are in a life-threatening state, $\eta_5$ measures the pace at which they are healing. The number of days the recognised population changes at a particular pace over time is provided by\\
+\begin{align}
+  \frac{\text{d}R_n(t)}{\text{d}t} = \theta_5 D_l(t) + \alpha_5 A_m(t) -(\epsilon_5 + \eta_5)R_n(t)  
+ \end{align}
+ The life-Threatening $T_0$ is taken from ailing and recognized subjects at rates of $\nu_5$ and $\epsilon_5$, respectively, and $\psi_5$ measures the rate at which they will be healed, $\sigma_5$ measures the death rate. The number of days the infected population changes at a particular pace over time is provided by\\
+ \begin{align}
+   \frac{\text{d}T_o(t)}{\text{d}t} = \nu_5 A_m(t) +\epsilon_5 R_n(t) - (\psi_5 + \sigma_5)T_o(t)
+ \end{align}
+
+ Healed $H_p$ is obtained from infection, diagnosed, ailing, recognized, and life-threatening at rates of $\tau_5$, $\xi_5$, $\rho_5$, $\eta_5$ and $\psi_5$ respectively. The number of days the healed population changes at a particular pace over time is provided by\\
+\begin{align}
+   \frac{\text{d}H_p(t)}{\text{d}t} = \tau_5 I_k(t) + \xi_5 D_l(t) + \rho_5 A_m(t) + \eta_5 R_n(t) + \psi_5 T_o(t)
+ \end{align}
+ The Extinction $E_q$ is obtained from life-threatening at a rate of $\sigma_5$. The number of days the Extinct population changes at a particular pace over time is provided by\\
+\begin{align}
+   \frac{\text{d}E_q(t)}{\text{d}t} = \sigma_5 T_o(t)  
+ \end{align}
+Table \ref{table:1} gives the description of model variables. 
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ |p{2cm}|p{6cm}|  } 
+ \hline
+\textbf{Component}  & \textbf{Description for the component} \\[0.5ex]
+ \hline
+$ S_j(t)$  & Individual population of Susceptible  \\
+\hline
+$I_k(t)$  & Individual population of Infected  \\
+\hline
+$D_l(t)$  & Individual population of Diagnosed  \\
+\hline
+$A_m(t)$  & Individual population of Ailing  \\
+\hline
+$R_n(t$)  & Individual population of Recognised  \\
+\hline
+$T_o(t)$  & Individual population of Threatened  \\
+\hline
+$H_p(t)$  & Individual population of Healed  \\
+\hline
+$E_q(t)$  & Individual population of Extinct  \\[1ex] 
+ \hline
+\end{tabular}
+\caption{The model's variable descriptions}
+\label{table:1}
+\end{table}
+
+Table \ref{table:2} gives the description of parameters and Figure \ref{Model:1} represents the graphical scheme representation below.
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ |p{2cm}|p{8cm}| } 
+ \hline
+\textbf{Symbols}  & \textbf{Description for the parameter} \\[0.5ex]
+  \hline
+ $\beta_5$ & Represents the frequency of infection following contact between a susceptible patient and an infected case.  \\
+\hline
+$\kappa_5$  & Indicates the likelihood of infection following contact between a susceptible case and a diagnosed case.    \\
+\hline
+$\mu_5$  & Indicates the likelihood of infection following contact between a susceptible\index{Susceptible} case and an ailing case.   \\
+\hline
+$\gamma_5$  & Represents the frequency of infection following contact between a susceptible and recognized case.  \\
+\hline
+$\lambda_5$  & Represents the likelihood that infected cases without symptoms\index{Symptoms} will be discovered.   \\
+\hline
+$\alpha_5$  & Indicates the likelihood of finding patients\index{Patients} symptomatic of an infection.  \\
+\hline
+$\delta_5$  & Indicates the likelihood that an infected case is unaware that they are infected. \\
+\hline
+$\theta_5$  & Indicates the likelihood that an infected case will become aware of their infection.   \\
+\hline
+$\nu_5$ & Indicates the pace at which a suspected infection case develops severe symptoms. \\
+\hline
+$\epsilon_5$  & Represents the speed at which the identified infected case develops life-threatening\index{Life-threatening} symptoms.   \\
+\hline
+$\sigma_5$  & Shows the mortality\index{Mortality} rate.   \\
+\hline
+$\tau_5$, $\rho_5$, $\eta_5$, $\xi_5$, $\psi_5$   & Represent the speed at which the five stages of infected cases are healing.   \\[1ex] 
+ \hline
+\end{tabular}
+\caption{Detailing the model's parameters}
+\label{table:2}
+\end{table}
+\newpage
+ %\subsection{Model flow diagram}
+Based on the hypotheses in \ref{Assumptions:1} and the findings of \citep{giordano2020modelling, higazy2020novel, assamagan2020study} we have adopted the SIDARTHE model with the graphical scheme shown below. 
+\begin{figure}[h!]
+ \begin{center}
+\includegraphics[width=0.95\textwidth]{model.png}
+\caption{SIDARTHE model flow diagram \citep{giordano2020modelling}}
+\label{Model:1}
+\end{center}
+ \end{figure}
+The SIDARTHE mathematical system of eight differential equations:\\
+ 
+%\begin{align} 
+
+\begin{eqnarray}
+\left\{\begin{array}{lcl}
+\displaystyle{\frac{\text{d}S_j(t)}{dt}}&=& -S_j(t)(\beta_5 I_k(t) +\kappa_5 D_l(t) +\mu_5 A_m(t)+\gamma_5 R_n(t)),\\
+ \frac{\text{d}I_k(t)}{\text{d}t} &=& S_j(t)(\beta_5 I_k(t) +\kappa_5 D(t)+\mu_5 A_m(t)+\gamma_5 R_n(t))\\
+                                  &-&(\lambda_5 +\delta_5 + \tau_5)I_k(t),\\
+\frac{\text{d}D_l(t)}{\text{d}t} &=&\lambda_5 I_k(t) -(\theta_5 + \xi_5)D_l(t), \\ 
+\frac{\text{d}A_m(t)}{\text{d}t} &=& \delta_5 I_k(t) -(\alpha_5 + \nu_5 + \rho_5)A_m(t),\\
+\frac{\text{d}R_n(t)}{\text{d}t} &=& \theta_5 D_l(t) + \alpha_5 A_m(t) -(\epsilon_5 + \eta_5)R_n(t),\\
+\frac{\text{d}T_o(t)}{\text{d}t} &=& \nu_5 A_m(t) +\epsilon_5 R_n(t) - (\psi_5 + \sigma_5)T_o(t),\\
+\frac{\text{d}H_p(t)}{\text{d}t} &=& \tau_5 I_k(t) + \xi_5 D_l(t) + \rho_5 A_m(t) + \eta_5 R_n(t) + \psi_5 T_o(t),\\
+\frac{\text{d}E_q(t)}{\text{d}t} &=& \sigma_5 T_o(t) 
+\label{EQ01} 
+ \end{array}\right.
+\end{eqnarray}
+
+\noindent In order to define the words and notations we will use in the remaining sections of the study, we give an overall synopsis\index{Synopsis} of SIDARTHE \citep{giordano2020modelling} in this paragraph.\\
+Table \ref{table:1} and Table \ref{table:2} below show the model's variable descriptions and details the model's parameters\index{Parameters} of non-linear\index{Non-linear} differential equations.\\
+\section{Mathematical analysis of Mozambique COVID-19}
+A bi-linear system with eight ordinary differential equations makes up the SIDARTHE model \ref{EQ01}. The system will take non-negative values for $t \ge 0$ in all phases if it is established with non-negative values at time 0. It is crucial to keep in mind that $H_p(t)$ and $E_q(t)$ are additive variables, which implies they depend on the other variables and their initial conditions. The compartmental nature of the system and the manifestation of the mass conservation property can be confirmed as follows:
+\begin{align*}
+    \frac{\text{d}S_j(t)}{\text{d}t} + \frac{\text{d}I_k(t)}{\text{d}t} +\frac{\text{d}D_l(t)}{\text{d}t} +\frac{\text{d}A_m(t)}{\text{d}t} +\frac{\text{d}R_n(t)}{\text{d}t} +\frac{\text{d}T_o(t)}{\text{d}t} +\frac{\text{d}H_p(t)}{\text{d}t}+ \frac{\text{d}E_q(t)}{\text{d}t} =0.
+\end{align*}
+Given that the variables display population percentages, we may assume\\
+\begin{align*}
+    S_j(t)+ I_k(t)+ D_l(t)+ A_m(t)+ R_n(t)+ T_o(t)+ H_p(t)+ E_q(t))=1
+\end{align*}
+where 1 represents the overall population, including extinction.
+\subsection{Model's feasible region of equilibrium}
+The variables in the adopted model must all always be positive in order to successfully detect the dynamics of the infection. We now present the $\Pi$ region of possibility.
+\begin{align*}
+    \Pi &= {(S_j(t), I_k(t), D_l(t), A_m(t), R_n(t), T_o(t), H_p(t), E_q(t))\in{R^8_+}:0\leq S_j(t) \leq F_1,\\
+    &0\leq I_k(t) \leq F_1, 0\leq D_l(t) \leq F_1, 0\leq A_m(t) \leq F_1, 0\leq R_n(t) \leq F_1,\\ 
+    &0\leq T_o(t) \leq F_1, 0\leq H_p(t) \leq F_1, 0\leq E_q(t) \leq F_1}
+\end{align*}\\
+We begin by using the integrating factor method to solve first-order linear differential equations.\\
+Since\\
+\begin{align*}
+    {\frac{\text{d}S_j(t)}{dt}}&= -S_j(t)(\beta_5 I_k(t) +\kappa_5 D_l(t) +\mu_5 A_m(t)+\gamma_5 R_n(t))\\
+                        S_j(t) &=Ne^{(S_j(t)(\beta_5 I_k(t) +\kappa_5 D_l(t) +\mu_5 A_m(t)+\gamma_5 R_n(t)))t}
+\end{align*}\\
+This suggests that \\
+\[ \lim_{t\to\infty} \text{sup}(S_j(t)\leq 0 \]\\\\
+For\\
+\begin{align*}
+   \frac{\text{d}I_k(t)}{\text{d}t} &= S_j(t)(\beta_5 I_k(t) +\kappa_5 D(t)+\mu_5 A_m(t)+\gamma_5 R_n(t)) -(\lambda_5 +\delta_5 + \tau_5)I_k(t)\\
+I_k(t) &= \frac{S_j(t)(\beta_5 I_k(t) +\kappa_5 D(t)+\mu_5 A_m(t)+\gamma_5 R_n(t))}{(\lambda_5 +\delta_5 + \tau_5)} + N(e^{(\lambda_5 +\delta_5 + \tau_5)t}) 
+\end{align*}\\\\
+This suggests that \\
+\[ \lim_{t\to\infty} \text{sup}(I_k(t))\leq \frac{S_j(t)(\beta_5 I_k(t) +\kappa_5 D(t)+\mu_5 A_m(t)+\gamma_5 R_n(t))}{(\lambda_5 +\delta_5 + \tau_5)} \]\\\\
+For\\
+\begin{align*}
+    \frac{\text{d}D_l(t)}{\text{d}t} &=\lambda_5 I_k(t) -(\theta_5 + \xi_5)D_l(t) \\
+    D_l(t)&= \frac{\lambda_5 I_k(t)}{(\theta_5 + \xi_5)} + Ne^{(\theta_5 + \xi_5)}t
+\end{align*}\\
+This suggests that\\ 
+\[ \lim_{t\to\infty} \text{sup}(D_l(t))\leq \frac{\lambda_5 I_k(t)}{(\theta_5 + \xi_5)} \]\\\\
+For\\
+\begin{align*}
+    \frac{\text{d}A_m(t)}{\text{d}t} &= \delta_5 I_k(t) -(\alpha_5 + \nu_5 + \rho_5)A_m(t)\\
+    A_m(t) &= \frac{\delta_5 I_k(t)}{(\alpha_5 + \nu_5 + \rho_5)} + Ne^{(\alpha_5 + \nu_5 + \rho_5)}t
+\end{align*}\\\\
+This suggests that\\
+
+\[ \lim_{t\to\infty} \text{sup}A_m(t) \leq \frac{\delta_5 I_k(t)}{(\alpha_5 + \nu_5 + \rho_5)} \]
+ For\\
+ \begin{align*}
+   \frac{\text{d}R_n(t)}{\text{d}t} &= \theta_5 D_l(t) + \alpha_5 A_m(t) -(\epsilon_5 + \eta_5)R_n(t)\\
+   R_n(t) & = \frac{\theta_5 D_l(t) + \alpha_5 A_m(t)}{(\epsilon_5 + \eta_5)} + Ne^{(\epsilon_5 + \eta_5)}t
+ \end{align*}\\\\
+ This suggests that\\ 
+
+\[ \lim_{t\to\infty} \text{sup} \leq \frac{\theta_5 D_l(t) + \alpha_5 A_m(t)}{(\epsilon_5 + \eta_5)} \]
+  For\\
+ \begin{align*}
+    \frac{\text{d}T_o(t)}{\text{d}t} &= \nu_5 A_m(t) +\epsilon_5 R_n(t) - (\psi_5 + \sigma_5)T_o(t)\\
+    T_o(t) &= \frac{\nu_5 A_m(t) +\epsilon_5 R_n(t)}{(\psi_5 + \sigma_5)} + Ne^{(\psi_5 + \sigma_5)}t
+ \end{align*}\\\\
+ This suggests that\\
+
+\[ \lim_{t\to\infty} \text{sup} \leq \frac{\nu_5 A_m(t) +\epsilon_5 R_n(t)}{(\psi_5 + \sigma_5)} \]
+  For\\
+ \begin{align*}
+     \frac{\text{d}H_p(t)}{\text{d}t} &= \tau_5 I_k(t) + \xi_5 D_l(t) + \rho_5 A_m(t) + \eta_5 R_n(t) + \psi_5 T_o(t)\\
+     H_p(t) &= Ne^{(\tau_5 I_k(t) + \xi_5 D_l(t) + \rho_5 A_m(t) + \eta_5 R_n(t) + \psi_5 T_o(t))}t
+ \end{align*}\\\\
+ This suggests that\\
+
+\[ \lim_{t\to\infty} \text{sup} (H_p(t)) \leq 0 \]
+  For\\
+  \begin{align*}
+     \frac{\text{d}E_q(t)}{\text{d}t} &= \sigma_5 T_o(t)\\
+     E_q(t) & = Ne^{\sigma_5 T_o(t)}t
+ \end{align*}\\\\
+ This suggests that\\
+
+\[ \lim_{t\to\infty} \text{sup} (E_q(t) \leq 0 \]\\\\
+Then we get\\\\
+\begin{enumerate}
+\begin{align*}
+    \item C_1 &= 0,\\
+    \item C_2 &= \frac{S_j(t)(\beta_5 I_k(t) +\kappa_5 D(t)+\mu_5 A_m(t)+\gamma_5 R_n(t))}{(\lambda_5 +\delta_5 + \tau_5)},\\
+    \item C_3 &= \frac{\lambda_5 I_k(t)}{(\theta_5 + \xi_5)},\\
+    \item C_4 &= \frac{\delta_5 I_k(t)}{(\alpha_5 + \nu_5 + \rho_5)},\\
+    \item C_5 &=  \frac{\theta_5 D_l(t) + \alpha_5 A_m(t)}{(\epsilon_5 + \eta_5)},\\
+    \item C_6 &= \frac{\nu_5 A_m(t) +\epsilon_5 R_n(t)}{(\psi_5 + \sigma_5)},\\
+    \item C_7 &= 0,\\
+    \item C_8 &= 0.
+\end{align*}
+    
+\end{enumerate}
+
+\subsection{Equilibrium point}
+Two equilibrium points, an endemic equilibrium (EE) and a disease-free equilibrium (DFE), are feasible in the region of the model system \ref{EQ01}. A disease-free equilibrium is designated by\\
+\begin{align} \label{DFE:DFE}
+    E_0 &= (S_j^0, I_k^0, D_l^0, A_m^0, R_n^0, T_o^0,  H_p^0,  E_q^0) = (\overline{\rm S}_j, 0, 0, 0, 0, 0, \overline{\rm H}_p , \overline{\rm E}_q)
+\end{align}
+where
+\begin{align*}
+    \overline{\rm S}_j + \overline{\rm H}_p + \overline{\rm E}_q = 1
+\end{align*}\\
+and if $R_0<1$ persists, this will happen. There are just susceptible, healed, and dead at this stage, with no diseases. This suggests that the population will be free of disease and that the rate of infection will decline.\\
+This is how an endemic equilibrium point is identified\\
+\begin{align}
+    E_*=(S_j^*, I_k^*, D_l^*, A_m^*, R_n^*, T_o^*, H_p^*, E_q^*)
+\end{align}\\
+By letting
+\begin{align}
+    E_*=(S_j^*, I_k^*, D_l^*, A_m^*, R_n^*, T_o^*, H_p^*, E_q^*)
+\end{align}
+to be a model \ref{EQ01} equilibrium point such that $W_*=S_j^*+ I_k^*+ D_l^*+ A_m^*+ R_n^*+ T_o^*+ H_p^*+ E_q^*$ and\\
+\begin{align}
+&-S_j^*(t)(\beta_5 I_k^*(t) +\kappa_5 D_l^*(t) +\mu_5 A_m^*(t)+\gamma_5 R_n^*(t)) = 0, \label{DFE:1}\\
+&S_j^*(t)(\beta_5 I_k^*(t) +\kappa_5 D(t)^*+\mu_5 A_m^*(t)+\gamma_5 R_n^*(t))
+-(\lambda_5 +\delta_5 + \tau_5)I_k^*(t) = 0,\label{DFE:2}\\
+&\lambda_5 I_k^*(t) -(\theta_5 + \xi_5)D_l^*(t), \label{DFE:3} \\  
+&\delta_5 I_k^*(t) -(\alpha_5 + \nu_5 + \rho_5)A_m^*(t) = 0, \label{DFE:4}\\
+&\theta_5 D_l^*(t) + \alpha_5 A_m^*(t) -(\epsilon_5 + \eta_5)R_n^*(t) = 0, \label{DFE:5}\\
+&\nu_5 A_m^*(t) +\epsilon_5 R_n^*(t) - (\psi_5 + \sigma_5)T_o^*(t) = 0, \label{DFE:6}\\
+&\tau_5 I_k^*(t) + \xi_5 D_l^*(t) + \rho_5 A_m^*(t) + \eta_5 R_n^*(t) + \psi_5 T_o^*(t) = 0 \label{DFE:7}\\
+&\sigma_5 T_o^*(t) = 0 \label{DFE:8} 
+\end{align}\\
+
+Solving \ref{DFE:1} we get\\
+\begin{align}
+    S_j^*=0
+\end{align}
+Substituting \ref{DFE:1} in \ref{DFE:2} we get\\
+\begin{align}
+ I_k^* =\frac{S_j^*\left(\mu_5 A_m^* +\kappa_5 D_l^* + \gamma_5 R_n^*\right)}{-S_j^*\beta_5 + \lambda_5 + \delta_5 + \tau_5} \label{DFE:9}
+\end{align}\\
+Solving \ref{DFE:3} we get
+\begin{align}
+D_l^* = \frac{\lambda_5 I_k^*}{\theta_5 + \xi_5} \label{DFE:10}
+\end{align}\\ 
+Solving \ref{DFE:4} we get 
+\begin{align}
+A_m^*& = \frac{\delta_5 I_k^*}{\alpha_5 + \nu_5 + \rho_5}   \label{DFE:11}
+\end{align}\\
+Solving \ref{DFE:5} we get
+\begin{align}
+R_n^*=\frac{\theta_5 D_l^* + \alpha_5 A_m^*}{\epsilon_5 + \eta_5} \label{DFE:12}
+\end{align}\\
+Solving \ref{DFE:6} we get 
+\begin{align}
+    T_o^*=\frac{\eta_5 A_m^* + \epsilon_5 R_n^*}{\psi_5 + \sigma_5} \label{DFE:13}
+\end{align}\\
+Solving \ref{DFE:8} we get
+\begin{align}
+    T_o^*=0
+\end{align}
+Now substitute \ref{DFE:10} and \ref{DFE:11} in \ref{DFE:12} we get
+\begin{align}
+    R_n^*=\frac{\left(\theta_5 \lambda_5 \alpha_5 + \nu_5 + \rho_5 + \alpha_5 \delta_5 \theta_5 + \xi_5\right)}{\theta_5 + \xi_5 \alpha_5 + \nu_5 + \rho_5 \epsilon_5 + \eta_5}I_k^* \label{DFE:14}
+\end{align}
+And substitute \ref{DFE:11} and \ref{DFE:14} in \ref{DFE:13} we get
+\begin{align}
+    T_o^*= \frac{\eta_5 \delta_5 \theta_5 + \xi_5 \epsilon_5 + \eta_5 + \epsilon_5(\theta_5 \lambda_5 \alpha_5 + \nu_5 + \rho_5 + \alpha_5 \delta_5 \theta_5 + \xi_5)}{\theta_5 + \xi_5 \alpha_5 + \nu_5 + \rho_5 \epsilon_5 + \eta_5 \psi_5 + \sigma_5}I_k^*    
+\end{align}\\
+The following is the state of endemic equilibrium that results from simplifying the aforementioned equations,
+\begin{eqnarray}
+\left\{\begin{array}{lcl}
+\displaystyle{S_j^*=0,\\
+I_k^* =\frac{S_j^*\left(\mu_5 A_m^* +\kappa_5 D_l^* + \gamma_5 R_n^*\right)}{-S_j^*\beta_5 + \lambda_5 + \delta_5 + \tau_5}},\\\\
+D_l^* = \frac{\lambda_5 I_k^*}{\theta_5 + \xi_5},\\\\
+A_m^* = \frac{\delta_5 I_k^*}{\alpha_5 + \nu_5 + \rho_5},\\\\
+R_n^*=\frac{\left(\theta_5 \lambda_5 \alpha_5 + \nu_5 + \rho_5 + \alpha_5 \delta_5 \theta_5 + \xi_5\right)}{\theta_5 + \xi_5 \alpha_5 + \nu_5 + \rho_5 \epsilon_5 + \eta_5}I_k^*,\\\\
+T_o^*= \frac{\eta_5 \delta_5 \theta_5 + \xi_5 \epsilon_5 + \eta_5 + \epsilon_5(\theta_5 \lambda_5 \alpha_5 + \nu_5 + \rho_5 + \alpha_5 \delta_5 \theta_5 + \xi_5)}{\theta_5 + \xi_5 \alpha_5 + \nu_5 + \rho_5 \epsilon_5 + \eta_5 \psi_5 + \sigma_5}I_k^* ,\\\\
+H_p^*=0,\\\\
+E_q^*=0} 
+\label{EQ02} 
+ \end{array}\right.
+\end{eqnarray}
+Suppose $R_0 > 1$, then this suggests that the disease\index{Disease} has advanced to the point where it will spread\index{Spread} throughout the population. Hence, whenever $R_0 > 1$ exists, the endemic equilibrium point $E^*$ exists.\\
+
+\subsection{Reproduction number}\label{R0}
+ To assess the severity and scope of the pandemic and to develop the most effective interventions\index{Interventions} and measures to safeguard the general public and stop the disease's spread, It is essential to calculate the $R_0$ of COVID-19 \citep{kwok2019epidemic}. In the early phases of an epidemic, large $R_0$ values are frequently computed\index{Computed} for a variety of factors, one of which is a lack of appropriate understanding of the disease\index{Disease}. $R_0$ values change between various populations as well as between subgroups of a specific population because the frequency and patterns\index{Patterns} of encounters in various populations vary due to elements like culture and community literacy rates \citep{alimohamadi2020estimate}. If $R_0>1$, the disease-free\index{Disease-free} equilibrium is unstable, suggesting that the disease may infect the population, whereas if $R_0<1$, the disease-free equilibrium is locally asymptotically stable and cannot spread to the population.\\\\
+ The fundamental reproduction\index{Reproduction} number for several epidemic\index{Epidemic} models has been calculated in a number of research articles. We employ the next-generation\index{Next-generation} matrix\index{Matrix} approach to determine the model's fundamental reproduction number \citep{fisman2020bidirectional}. We differentiate\index{Differentiate} the infected\index{Infected} compartments\index{Compartments} $(I_k, D_l, A_m, R_n, T_o)$ from the uninfected compartment (S). Let construct matrices \( \mathcal{F} \) and \( \mathcal{V} \) at as\\\\
+ \( \mathcal{F} \) = \begin{bmatrix}
+   -S_j(t)(\beta_5 I_k(t( + \kappa_5 D_l(t) + \mu_5 A_m(t) + \gamma_5 R_n(t))\\
+   0\\
+   0\\
+   0\\
+   0  
+ \end{bmatrix}\\\\
+and\\\\
+\( \mathcal{V} \) =
+\begin{bmatrix}
+    -x_1I_k(t) \\
+    \lambda_5 I_k(t) -x_2D_l(t)\\
+    \delta_5 I_k(t) - x_3A_m(t)\\
+    \theta_5 D_l(t) + \alpha_5 A_m(t) -x_4R_n(t)\\
+    \nu_5 A_m(t) + \epsilon_5 R_n(t) - x_5T_o(t)
+\end{bmatrix}\\\\
+We now calculate matrices $F$ and $V$ as follows:\\\\
+Let $F$ = Jacobian of \( \mathcal{F} \) at $E^0$,\\\\
+$F$ = \begin{bmatrix}
+    -\beta_5 & -\kappa_5 & -\mu_5 & -\gamma_5 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+\end{bmatrix}\\\\
+And let $V$ = Jacobian of \( \mathcal{V} \) at $E^0$,\\\\
+$V$ = \begin{bmatrix}
+    -x_1_a & 0 & 0 & 0 & 0\\
+    \lambda_5 & -x_2_a & 0 & 0 & 0\\
+    \delta_5 & 0 & -x_3_a & 0 & 0\\
+    0 & \theta_5 & \alpha_5 & -x_4_a & 0\\
+    0 & 0 & \nu_5 & \epsilon_5 & -x_5_a   
+\end{bmatrix}\\\\
+and now we must calculate $FV^{-1}$. As a result, we must find the inverse\index{Inverse} matrix\index{Matrix} of $V$ which is $V^{-1}$,\\
+$V^{-1}$ = \begin{bmatrix}
+    z_1_1 &  0 & 0 & 0 & 0\\
+    z_2_1 &  z_2_2 & 0 & 0 & 0\\
+    z_3_1 &  0 & z_3_3 & 0 & 0\\
+    z_4_1 &  z_4_2 & z_4_3 & z_4_4 & 0\\
+    z_5_1 &  z_5_2 & z_5_3 & z_5_4 & z_5_5
+\end{bmatrix}\\\\
+where \begin{align*}
+    z_{11}&=-\frac{1}{x_1_a}, z_{21}=-\frac{\lambda_5}{x_1_ax_2_a}, z_{22}=- \frac{1}{x_2_a},\\\\
+    z_{31}&= -\frac{\delta_5}{x_1_ax_3_a}, z_{33}= -\frac{1}{x_3_a}, z_{41}=\frac{-\alpha \delta x_2_a - \lambda \theta x_3_a}{x_1_ax_2_ax_3_ax_4_a},\\\\
+    z_{42}&= -\frac{\theta_5}{x_2_ax_4_a}, z_{43}= -\frac{\alpha_5}{x_3_ax_4_a}, z_{44} = -\frac{1}{x_4_a},\\\\
+    z_{51}&= \frac{-\delta_5 \nu_5 x_2_ax_4_a - \alpha_5 \delta_5 \eta_5 x_2_a - \lambda_5 \epsilon_5 \theta_5 x_3_a}{x_1_ax_2_ax_3_ax_4_ax_5_a}, r_{52}=- \frac{\delta_5 \theta_5}{x_2_ax_4_ax_5_a},\\\\
+    z_{43}&=\frac{-\nu_5 x_4_a - \alpha_5 \epsilon_5}{x_3_ax_4_ax_5_a}, z_{44}= -\frac{\epsilon_5}{x_4_ax_5_a}, z_{55}=-\frac{1}{x_5_a}
+\end{align*}\\\\
+Then it follows that the next generation matrix is:\\\\
+$FV^{-1}$ = \begin{bmatrix}
+    u_1_b & u_2_b & u_3_b & u_4_b & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+    0 & 0 & 0 & 0 & 0\\
+\end{bmatrix}\\\\
+where\\\\
+\begin{align*}
+    u_1_b& = \frac{\beta_5}{x_1} + \frac{\kappa_5 \lambda_5}{x_1_ax_2_a}- \frac{\gamma_5(\lambda_5 \theta_5 x_3_a - \alpha_5 \delta x_2_a)}{x_1_ax_2_ax_3_ax_4_a},\\\\
+    u_2_b&= \frac{\kappa_5}{x_2_a} + \frac{\gamma_5 \theta_5}{x_2_ax_4_a}, u_3_b = \frac{\kappa_5}{x_2_a} + \frac{\gamma_5 \alpha_5}{x_2_ax_4_a}, u_4_b = \frac{\gamma_5}{x_4_a}.
+\\end{align*}\\\\
+The eigenvalues\index{Eigenvalues} of $FV^{-1}$ are\\
+\begin{align*}
+    \Lambda_1 &= 0,\\\\
+    \Lambda_2 &= 4,\\\\
+    \Lambda_3 &= \frac{\beta_5 x_2_ax_3_ax_4_a + \kappa_5 \lambda_5 x_3_ax_4_a + \gamma_5 \lambda_5 \theta_5 x_3_a + \gamma_5 \alpha_5 \delta_5 x_2_a + \mu_5 \delta_5 x_2_ax_4_a}{x_1_ax_2_ax_3_ax_4_a},\\\\
+    \Lambda_4 &= 1.
+\end{align*}\\\\
+The dominating eigenvalue of $FV^{-1}$ which is $R_0$ is:\\
+\begin{align*}
+   R_0 = \frac{\beta_5 x_2_ax_3_ax_4_a + \kappa_5 \lambda_5 x_3_ax_4_a + \gamma_5 \lambda_5 \theta_5 x_3_a + \gamma_5 \alpha_5 \delta_5 x_2_a + \mu_5 \delta_5 x_2_ax_4_a}{x_1_ax_2_ax_3_ax_4_a}
+\end{align*}\\\\
+which can be simplified as \\\\
+\begin{align*}
+ R_0 = \frac{\beta_5}{x_1_a} + \frac{\kappa_5 \lambda_5}{x_1_ax_2_a} + \frac{\mu_5 \delta_5}{x_1_ax_3_a} + \frac{\gamma_5 \lambda_5 \theta_5}{x_1_ax_2_ax_4_a} + \frac{\gamma_5 \theta_5 \delta_5}{x_1_ax_3_ax_4_a}
+\end{align*}
+
+\subsection{Stability}
+
+\subsubsection{Local stability}
+\subsubsection{Disease-free equilibrium point (Local stability)}
+When $R_0<1$ and when $R_0>1$, the model system's disease-free equilibrium is locally asymptotically stable and unstable, respectively.\\
+\begin{theorem}
+    If R0 < 1, then the disease-free equilibrium is locally
+    asymptotically stable on $\omega \in {\rm I\!R_+^8}$. If $R_0 > 1$, 
+    then the disease-free equilibrium is unstable.\\ 
+\end{theorem}\\
+\emph{Proof.} The model system $\ref{EQ01}$ has a unique disease-free equilibrium\\
+\begin{align*}
+    E_0 &= \overline{\rm S}_j \ge 0, \overline{\rm I}_k =0, \overline{\rm D}_l =0,
+    \overline{\rm A}_m =0, \overline{\rm R}_n =0, \overline{\rm T}_o =0,
+    \overline{\rm H}_p \ge 0, \overline{\rm E}_q \ge 0. 
+\end{align*}\\
+We must first determine the Jacobian matrix  of the model \ref{EQ01} in order to examine local stability. We get\\\\
+$J_{E_{O}}$ =\begin{bmatrix}
+     A_1 & -1 & -1 & -1 & -1 & 0 & 0 & 0\\
+     G_1 & B_1 &  1 &  1 &  1 &  0 &  0 &  0\\ 
+    0 & H_1 &  C_1 &  0 &  0 &  0 &  0 &  0\\
+    0 & I_1 &  0 &  D_1 &  0 &  0 &  0 &  0\\
+    0 & 0 & J_1 &  K_1 &  E_1 &  0 &  0 &  0\\
+    0 & 0 &  0 &  L_1 &  M_1 &  F_1 &  0 &  0\\
+    0 & N_1 &  O_1 &  P_1 &  Q_1 &  R_1 &  0 &  0\\
+    0 & 0 &  0 &  0 &  0 &  0 &  S_1 &  0\\
+\end{bmatrix}\\\\
+where\\
+\begin{align*}
+   A_1&= -(\beta_5 + \kappa_5 + \mu_5 + \gamma_5), G_1 = (\beta_5 + \kappa_5 + \mu_5 + \gamma_5),\\
+   B_1 &= (\beta_5 -(\lambda_5 + \delta_5 + \tau_5)), C_1 = (\theta_5 + \xi_5),\\
+   D_1 &=(\alpha_5 + \nu_5 + \rho_5), E_1 = (\epsilon_5 + \eta_5), F_1 = (\psi_5 + \sigma_5),\\
+   S_1 &= \sigma_5, R_1 = \psi_5, Q_1 = \eta_5, N_1 = \tau_5, O_1 = \xi_5, P_1 = \rho_5,\\
+   L_1 &= \nu_5, M_1 = \epsilon_5, J_1 =  \theta_5, K_1 = \alpha_5, H_1 = \lambda_5, I_1 = \sigma_5.
+\end{align*}\\\\
+The characteristic equation of the Jacobian matrix is given by\\
+det($J(E_o)-yI) =0$, let det($J(E_o)-yI) = P(y)$\\
+so by using the Leibniz formula, we get\\\\
+$P(y) =y^8 + u_1y^7 + u_2y^6 + u_3y^5 + u_4y^4 + u_5y^3 + u_6y^2 $\\\\
+where\\
+
+\begin{enumerate}
+    \item $ u_1_c = (-A_1 - B_1 - C_1 - D_1 -E_1 -F_1)$
+    \item $u_2_c = (A_1B_1 + A_1C_1 + B_1C_1 + A_1D_1 + B_1D_1 + C_1D_1 +A_1E_1 +\\
+    B_1E_1 +C_1E_1 +D_1E_1 + A_1F_1 + B_1F_1 +C_1F_1 + D_1F_1 + E_1F_1 +\\
+    G_1 - H_1 -I_1)$
+    \item $u_3_c = (I_1A_1 -A_1B_1C_1 + I_1C_1 - A_1B_1D_1 - A_1C_1D_1 -B_1C_1D_1 -\\
+    A_1B_1E_1 -A_1C_1E_1 -B_1C_1E_1 - A_1D_1E_1 - B_1D_1E_1 - C_1D_1E_1 +\\
+    I_1E_1 - A_1B_1F_1 -A_1C_1F_1 - B_1C_1F_1 - A_1D_1F_1 - B_1D_1F_1 -\\
+    C_1D_1F_1 - A_1E_1F_1 - B_1E_1F_1 -C_1E_1F_1 - D_1E_1F_1 +I_1F_1 -\\
+    C_1G_1 - D_1G_1 - E_1G_1 - F_1G_1 + I_1G_1 + A_1H_1 +D_1H_1 +\\
+    E_1H_1 + F_1H_1 +G_1H_1 - H_1J_1 - I_1K_1)$
+    \item $u_4_c = (- I_1A_1C_1 + A_1B_1C_1D_1 - I_1A_1E_1 + A_1B_1C_1E_1 - I_1C_1E_1 +\\
+    A_1B_1D_1E_1+ A_1C_1D_1E_1 + + B_1C_1D_1E_1 - I_1A_1F_1 + A_1B_1C_1F_1 -\\
+    I_1C_1F_1 + A_1B_1D_1F_1 + A_1C_1D_1F_1 ++ B_1C_1D_1F_1 + A_1C_1E_1F_1 +\\
+    B_1C_1E_1F_1 + A_1D_1E_1F_1 + B_1D_1E_1F_1 +C_1D_1E_1F_1 -I_1E_1F_1 -\\
+    I_1C_1G_1 + C_1D_1G_1 +C_1E_1G_1 + D_1E_1G_1 - I_1E_1G_1 +C_1F_1G_1 +\\
+    D_1F_1G_1 + E_1F_1G_1 - I_1F_1G_1 -A_1D_1H_1 -A_1E_1H_1 -D_1E_1H_1 -\\
+    A_1F_1H_1 -D_1F_1H_1 - E_1F_1H_1 -D_1G_1H_1 -E_1G_1H_1 -F_1G_1H_1 +\\
+    A_1H_1J_1 +D_1H_1J_1 +F_1H_1J_1 +G_1H_1J_1 + I_1A_1K_1 + I_1C_1K_1 +\\
+    I_1F_1K_1 + I_1G_1K_1)$
+    \item $u_5_c = (I_1A_1C_1E_1 - A_1B_1C_1D_1E_1 + I_1A_1C_1F_1 - A_1B_1C_1D_1F_1 +\\
+     I_1A_1E_1F_1 - A_1B_1C_1E_1F_1 + I_1C_1E_1F_1 - A_1B_1D_1E_1F_1 -\\
+    A_1C_1D_1E_1F_1 -  B_1C_1D_1E_1F_1 +  I_1C_1E_1G_1 - C_1D_1E_1G_1 +\\
+    I_1C_1F_1G_1 - C_1D_1F_1G_1 -C_1E_1F_1G_1 -D_1E_1F_1G_1 +I_1E_1F_1G_1 +\\
+    A_1D_1E_1H_1 +A_1D_1F_1H_1 + A_1E_1F_1H_1 + D_1E_1F_1H_1 + D_1E_1G_1H_1 +\\
+    D_1F_1G_1H_1 + E_1F_1G_1H_1 - A_1D_1H_1J_1 - A_1F_1H_1J_1 - D_1G_1H_1J_1 -\\
+     F_1G_1H_1J_1 - I_1A_1C_1K_1 - I_1A_1F_1K_1 - I_1C_1F_1K_1 - I_1C_1G_1K_1-\\
+    I_1F_1G_1K_1)$
+    \item $u_6_c = (-I_1A_1C_1E_1F_1 + A_1B_1C_1D_1E_1 -I_1C_1E_1F_1G_1+ C_1D_1E_1F_1G_1 -\\
+                     A_1D_1E_1F_1G_1 -E_1F_1G_1H_1 + A_1D_1F_1H_1J_1 + D_1F_1G_1H_1J_1 +\\ 
+                   I_1A_1C_1F_1K_1 + I_1C_1F_1G_1K_1)$
+\end{enumerate}\\
+Additionally, $E_0$ will be locally asymptotically stable if we have\\\\
+det\begin{bmatrix}
+    u_1_c & 1\\
+    u_3_c & u_2_c
+\end{bmatrix}>0, 
+det\begin{bmatrix}
+    u_1_c & 1 & 0\\
+    u_3_c & u_2_c & u_1_c\\
+    u_5_c & u_4_c & u_3_c
+\end{bmatrix}>0,
+det\begin{bmatrix}
+    u_1_c & 0 & 0 & 0\\
+    u_3_c & u_2_c & u_1_c & 1\\
+    u_5_c & u_4_c & u_3_c & u_2_c\\
+    0 & u_6_c & u_5_c & u_4_c
+\end{bmatrix}>0,\\\\
+
+det\begin{bmatrix}
+    u_1_c & 1 & 0 & 0 & 0\\
+    u_3_c & u_2_c & u_1_c & 1 & 0\\
+    u_5_c & u_4 & u_3_c & u_2_c & u_1_c\\
+    0 & u_6_c & u_5_c & u_4_c & u_3_c\\
+    0 & 0 & 0 & u_6_c & u_5_c
+\end{bmatrix}>0,
+det\begin{bmatrix}
+    u_1_c & 1 & 0 & 0 & 0 & 0\\
+    u_3_c & u_2_c & u_1_c & 1 & 0 & 0\\
+     u_5_c & u_4_c & u_3_c & u_2_c & u_1_c & 1\\
+      0 & u_6_c & u_5_c & u_4_c & u_3_c & u_2_c\\
+    0 & 0 & 0 & u_6_c & u_5 & u_4_c\\
+    0 & 0 & 0 & 0 & 0 & u_6_c
+\end{bmatrix}>0\\\\
+Following that, all of the Jacobian matrix's eigenvalues have negative real portions according to the Routh-Hurwitz condition. As a result, the DFE is unstable when $R_0 > 1$ and locally asymptotically stable when $R_0<1$.
+
+\subsubsection{Endemic equilibrium point (Local stability)}
+When $R_0 > 1$, \ref{EQ01} model system's endemic equilibrium point ($E_*$) is locally asymptotically stable. 
+From Theorem 4.2 of J Banasiak \citep{banasiak9models}, if $R_0 > 1$, it has a unique endemic\index{Endemic} equilibrium and this is summarised in the following Theorem.\\
+\begin{theorem}\label{Local}
+If $R_0<1$, then the disease-free equilibrium is locally asymptotically stable. If $R_0>1$, then the disease-free equilibrium is unstable. 
+\end{theorem}
+Since the aforementioned theorem explains everything, there is no need for proof.
+\subsubsection{Global stability}
+This section provides an overview of Castilo-Chavez's \citep{castillo2002computation} DFE's global stability.\\
+  If the given mathematical model\index{Model} system \ref{EQ01} can be written in the form:\\
+ 
+\begin{eqnarray}
+\left\{\begin{array}{lcl}
+\displaystyle{\frac{dV}{dt}=F(V,W),\\\\
+      \frac{dW}{dt}=G(V,W), G(V,0) =0,
+\label{GB} 
+ \end{array}\right.
+\end{eqnarray}  
+where $V$ = $(S_j, H_p, E_q)\in{R^3_+}$, comprises of the uninfected components and W = $(I_k, D_l, A_m, R_n, T_o)$$\in{R^5_+}$ represents the classes of infected and infectious individuals.
+\\\\
+The DFE is represented by\\
+\begin{align} \label{DFE:DFE}
+    E_0 &= (\overline{\rm S}_j, 0, 0, 0, 0, 0, \overline{\rm H}_p , \overline{\rm E}_q)
+\end{align}
+where
+\begin{align*}
+    \overline{\rm S}_j + \overline{\rm H}_p + \overline{\rm E}_q = 1
+\end{align*}\\
+The following requirements (a) and (b) must be met for $E^{0}$ to be stable globally asymptotically. The conditions are listed as:\\
+\begin{enumerate}[label=\alph*)]
+    \item \label{(a)} For $\frac{dV}{dt}=F(V_0,0), V_0$ is globally asymptotically stable.
+    \item \label{(b)} G(V,W) = AW - $\Tilde{G}(V,W)$, where $\Tilde{G}(V,W) \ge0$ and $A = D_WG(V_0,0)$ is a M-matrix. All of the matrix's non-negative off-diagonal elements make up the M-matrix. In the mathematical model ((1)-(8)), the provided system of differential equations    must satisfy the given condition \ref{GB} in order then the point $E^{0} = (V_0,0)$ to be globally asymptotically stable equilibrium of a given mathematical model if $R_0<1$.
+\end{enumerate}
+And the theorem by Castilo-Chavez's \citep{castillo2002computation}, states that
+\begin{theorem}
+The fixed point $E^0$ is a globally asymptotically stable equilibrium point of system \ref{EQ01} provided $R_0 < 1$ and the conditions given in \ref{GB} are satisfied.
+\end{theorem}
+There is no requirement for proof because the aforementioned theorem adequately explains everything.
+\section{Analysis}
+By identifying the SIDARTHE parameters of the model that properly represent the time evolution of data, we studied the three datasets of current, healed, and mortality cases. The basic reproduction number calculated in \ref{R0} will then be estimated using actual data for Mozambique COVID-19. The finest parameters may vary over time depending on how the pandemic develops and the control mechanisms that are used, yielding an evolution of the fundamental reproduction number as a function of time. The statistical uncertainty relating to the number of tests performed and cases discovered were conveyed to the $R_0$ estimations. The proportion of the infected but untreated population, which is predicted by the model but unaccounted for in the data, was used as a systematic error measure for the R 0 values.
+\begin{figure}
+     \centering
+         \includegraphics[width=\textwidth]{Goodness of fitting' (R0)_Moz.png}
+         \caption{The goodness-of-fit}
+         \label{The goodness-of-fit}
+\end{figure}\\
+\clearpage
+     \begin{figure}
+     \centering
+         \includegraphics[width=\textwidth]{ModelingMOZ.png}
+         \caption{COVID-19 data and model graphs for Mozambique and basic reproduction plot below}
+         \label{MOZ}
+\end{figure}\\
+
+\clearpage
+\begin{figure}
+     \centering
+         \includegraphics[width=\textwidth]{SIDARTHE_model_variousR024052020_page-0001.jpg}
+         \caption{SIDARTHE model fitted with COVID-19 data}
+         \label{various}
+\end{figure}\\
+\clearpage
+\begin{figure}
+     \centering
+         \includegraphics[width=\textwidth]{Unaffected and Heald_Moz.png}
+         \caption{unaffected and healed plot}
+         \label{unaffected}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+On March 22, 2020, Mozambique identified the first individual who had tested positive for COVID-19. For this reason, he was separated, and contact tracing was carried out \citep{assamagan2020study} to ensure that no further transmission can happen. Other nations, including China, Italy, South Africa, Egypt, and Nigeria, to name a few, had already reported their first positive cases on November 17, 2019, February 21, March 5, and February 27 all in 2020, respectively, Mozambique did not hesitate and made the decision the following day to close the educational facilities in order to prevent further transmission \citep{sumbana2020air, assamagan2020study, theguardian, worldeconomicforummeeting}. From 12 May to 30 May 2020 restrictions on international travel were imposed  \citep{assamagan2020study}.\\\\
+From figure \ref{The goodness-of-fit} we can see that confirmed cases are correctly predicted in as much as there are some errors where the actual data is below the line of goodness-of-fit, but the difference is minimal. As we can see from the fluctuations that are close to the line of goodness-of-fit, the deaths were also accurately anticipated. Both the healed and active patients are anticipated nicely. The active case, total cases, extinction (deaths), fully immunized, and healed are all shown in figure \ref{MOZ}, and they are all supported by both real data and the model. Since the model correctly predicted all of them up until the Johnson & Johnson vaccination, where we see that the active cases are slightly lower than the predicted ones, we can confirm what the goodness-of-fit\index{Goodness-of-fit} line revealed. This indicates that the vaccine significantly impacted the spread of the virus.\\\\ 
+
+Figure \ref{various} shows that deaths occurred a short time after the first case was reported. The diseases are apparent and they were spreading quickly. From the start, the virus was well-known, and by day 400, it had almost completely disappeared. Diagnoses are not seen until day 200 since it was the lowest point on the graphs we have and because it is unclear how many diagnoses were made on the preceding days. Since fewer fatalities were reported, the number of healed persons increased from day one, as seen by the graphs, which is the graph located below all the other graphs. The sick people were many up until day 400 when they nearly vanished and then began to rise once more. According to the graph, the number of people with life-threatening conditions was similarly high. Figure \ref{unaffected} shows the model's predicted healed population, while the unaffected population is the proportion of the population that was not assessed in the data. We can see that there are more anticipated healed individuals than there were omitted from the data.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+To explore the dynamics\index{Dyanamics} of transmission in Mozambique, we used the SIDARTHE model, and we estimated the reproduction number to determine how many people each person can infect at any given time. In order to determine whether the model correctly predicted the Mozambique COVID-19 data, we fitted the actual data from that country and compared it to the model. The model was successfully applied in Italy, and we ultimately realized that it also accurately modeled the COVID-19 data from Mozambique using the line of goodness-of-fit to measure the error.
+ \clearpage
+\addcontentsline{toc}{section}{\refname}
+\bibliography{name}
+\bibliographystyle{plainnat}
+\clearpage
+\printindex
+\end{document}
